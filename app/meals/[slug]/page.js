@@ -3,12 +3,17 @@ import classes from "./page.module.css";
 import Image from "next/image";
 import { getMeal } from "@/lib/meals";
 import { notFound } from "next/navigation";
-async function DynamicMealRoute({ params }) {
-  const meal = await getMeal(params.slug);
+
+export async function generateMetadata({ params }) {
+  const meal = getMeal(params.slug);
+  return { title: meal?.title };
+}
+
+function DynamicMealRoute({ params }) {
+  const meal = getMeal(params.slug);
   if (!meal) {
     notFound();
   }
-  console.log('MEAL ', meal.image)
   meal.instructions = meal.instructions?.replace(/\n/g, "<br />");
   return (
     <header className={classes.header}>
